@@ -14,3 +14,17 @@ html {
   padding: 0;
 }
 
+/* enforce a minimum width on body and hide overflow */
+
+body {
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+/* i like this for images */
+
+img {
+  width: 100%;
+  max-width: 100%;
+}
+
