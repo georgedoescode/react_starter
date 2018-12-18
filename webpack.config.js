@@ -6,12 +6,17 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const development = process.env.NODE_ENV === 'development';
 
+const sourceMap = development ? 'inline-source-map' : 'source-map';
+
+console.log(sourceMap)
+
 module.exports = {
   entry: './src/index.js',
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].bundle.js'
   },
+  devtool: sourceMap,
   devServer: {
     contentBase: 'dist',
     overlay: true
