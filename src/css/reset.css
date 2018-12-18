@@ -1,0 +1,15 @@
+/* pretty hardcore reset, but i like it */
+
+html {
+  box-sizing: border-box;
+}
+
+/* this is a better way of setting box sizing (according to wes bos I think) */
+
+*, 
+*:before, 
+*:after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
