@@ -8,8 +8,6 @@ const development = process.env.NODE_ENV === 'development';
 
 const sourceMap = development ? 'inline-source-map' : 'source-map';
 
-console.log(sourceMap)
-
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -31,7 +29,8 @@ module.exports = {
         test: /\.css$/,
         use: [
           development ? 'style-loader' : MiniCssExtractPlugin.loader,
-          'css-loader'
+          'css-loader',
+          'postcss-loader'
         ]
       },
       {

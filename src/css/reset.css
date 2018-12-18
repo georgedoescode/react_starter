@@ -4,7 +4,7 @@ html {
   box-sizing: border-box;
 }
 
-/* this is a better way of setting box sizing (according to wes bos I think) */
+/* this is a better way of setting box sizing (i think) */
 
 *, 
 *:before, 
@@ -28,3 +28,6 @@ img {
   max-width: 100%;
 }
 
+::placeholder {
+  color: orange;
+}
