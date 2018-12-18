@@ -34,13 +34,13 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin('dist'),
     new HtmlWebpackPlugin({
-      template: './static/index.html'
+      template: './public/index.html'
     }),
     new MiniCssExtractPlugin({
       filename: "css/[name].css",
     }),
     new CopyWebpackPlugin([{
-      from: './static/favicon-32x32.png',
+      from: './public/favicon-32x32.png',
       to: './'
     }])
   ]
