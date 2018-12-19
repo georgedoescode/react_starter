@@ -65,7 +65,7 @@ table {
 
 body {
   min-width: 320px;
-  overflow-x: hidden;
+  overflow-x: scroll;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-kerning: normal;
