@@ -82,7 +82,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'css/[name].css', // in production, extract css to a seperate file
     }),
-    // copy favicon to dist/ root
+    // copy favicon to dist/
     new CopyWebpackPlugin([{
       from: './public/favicon-32x32.png',
       to: './',

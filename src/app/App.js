@@ -8,6 +8,7 @@ const Title = styled.h1`
   font-size: 36px;
   text-align: center;
   margin-top: 32px;
+  font-weight: 700;
 `;
 
 const App = () => (
