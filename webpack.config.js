@@ -13,8 +13,8 @@ const development = process.env.NODE_ENV === 'development';
 const sourceMap = development ? 'inline-source-map' : 'source-map';
 
 module.exports = {
-  // our entrypoint
-  entry: './src/index.js',
+  // our entrypoint + polyfill for ie11
+  entry: ['babel-polyfill', './src/index.js'],
   output: {
     // set the path to which the app will be bundled
     path: path.join(__dirname, 'dist'),
