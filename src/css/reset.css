@@ -68,7 +68,8 @@ body {
   overflow-x: scroll;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-kerning: normal;
+	font-kerning: normal;
+	text-rendering: auto;
 }
 
 /* i like this for images */
