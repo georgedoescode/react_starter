@@ -32,6 +32,6 @@ For developent:
 + `npm install`(wait approx 10 years)
 + `npm run dev`
 
-### For production
+For production:
 
 + `npm run build`
