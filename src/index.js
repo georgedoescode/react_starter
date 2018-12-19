@@ -6,6 +6,6 @@ import App from './app/App';
 import './css/reset.css';
 
 ReactDOM.render(
-  <App></App>,
-  document.getElementById('root')
-)
+  <App />,
+  document.getElementById('root'),
+);
