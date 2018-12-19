@@ -5,12 +5,17 @@ import styled from 'styled-components';
 const Title = styled.h1`
   font-family: Helvetica, sans-serif;
   color: rgba(0,0,0,0.85);
-  font-size: 48px;
+  font-size: 36px;
+  text-align: center;
+  margin-top: 32px;
 `;
 
 const App = () => (
   <div>
-    <Title>React Starter</Title>
+    <Title>
+      React + Webpack Starter
+      <span role="img" aria-label="hot fire"> 🔥</span>
+    </Title>
   </div>
 );
 
