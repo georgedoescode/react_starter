@@ -1,91 +1,133 @@
-const path = require('path');
-
-// import plugins
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-
-// check env (set in dev / prod scripts in package.json, eg: NODE_ENV=production)
-const development = process.env.NODE_ENV === 'development';
-
-// use inline source maps for dev, source map for prod
-const sourceMap = development ? 'inline-source-map' : 'source-map';
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  // our entrypoint + polyfill for ie11
-  entry: ['babel-polyfill', './src/index.js'],
+  // webpack always requires and entry point
+  entry: "./src/index.js",
+  // specify the output path for build
   output: {
-    // set the path to which the app will be bundled
-    path: path.join(__dirname, 'dist'),
-    // output
-    filename: '[name].bundle.js',
+    path: path.join(__dirname, "dist"),
+    // contenthash so SW know something has changed
+    filename: "[name].[contenthash].min.js"
   },
-  // use the sourcemap that was previously defined
-  devtool: sourceMap,
-  // set up dev server (this allows for livereloads during development)
+  optimization: {
+    // split out vendor code
+    splitChunks: {
+      chunks: "all"
+    }
+  },
+  // config for our local dev server, this gives us nice live reloading when working locally
   devServer: {
-    // set contentbase to match webpack's output path
-    contentBase: 'dist',
-    // overlay errors over the browser window
+    contentBase: path.join(__dirname, "dist"),
     overlay: true,
+    port: 9000
   },
+  // define rules for different file types
   module: {
-    // rules for each file type
     rules: [
-      // js, eslint
+      // JS + JSX
       {
-        enforce: 'pre',
-        test: /\.(js|jsx)$/, // extensions to test
-        exclude: /node_modules/, // ignore node_modules
-        loader: 'eslint-loader', // use eslint
+        test: /\.m?js$/,
+        exclude: /(node_modules)/,
+        /* JS */
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+            plugins: ["babel-plugin-styled-components"]
+          }
+        }
       },
-      // js, babel
+      // SASS
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: ['babel-loader'],
+        test: /\.scss$/,
+        use: [
+          // in production mode, extract CSS to a separate file
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: process.env.NODE_ENV === "development"
+            }
+          },
+          "css-loader", // translates CSS into CommonJS
+          "sass-loader" // compiles Sass to CSS
+        ]
       },
-      // css
+      // CSS
       {
         test: /\.css$/,
-        // used in order: 1. postcss loader, 2. css-loader, 3. style loader / MiniCssExtractPlugin
         use: [
-          development ? 'style-loader' : MiniCssExtractPlugin.loader, // in development, use style loader, in production, extract css to a seperate file
-          'css-loader', // loader for css
-          'postcss-loader', // loader for postcss, for config see postcss.config.js
-        ],
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              hmr: process.env.NODE_ENV === "development"
+            }
+          },
+          { loader: "css-loader", options: { importLoaders: 1 } },
+          {
+            loader: "postcss-loader",
+            options: {
+              ident: "postcss",
+              plugins: loader => [
+                require("postcss-import")({ root: loader.resourcePath }),
+                require("postcss-preset-env")()
+              ]
+            }
+          }
+        ]
       },
-      // images
+      // HTML
       {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader',
-        ],
+        test: /\.(html)$/,
+        use: ["html-loader"]
       },
-      // fonts
+      // IMAGES
+      {
+        test: /\.(jpe?g|png|gif)$/,
+        use: [
+          {
+            loader: "responsive-loader",
+            options: {
+              adapter: require("responsive-loader/sharp"),
+              quality: 85,
+              min: 320,
+              max: 1920,
+              placeholder: true
+            }
+          }
+        ]
+      },
+      // FONTS
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: [
-          'file-loader',
-        ],
-      },
-    ],
+        use: ["file-loader"]
+      }
+    ]
   },
+  // template for index.html
   plugins: [
-    // on each 'build' or 'dev', remove old 'dist/' directory
-    new CleanWebpackPlugin('dist'),
-    // the 'template index.html file'
     new HtmlWebpackPlugin({
-      template: './public/index.html',
+      template: "./src/index.html",
+      filename: "index.html",
+      minify: {
+        collapseWhitespace: true,
+        removeComments: true,
+        removeRedundantAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        useShortDoctype: true
+      }
     }),
+    // adding contenthash to css so that SW knows when to update
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css', // in production, extract css to a seperate file
+      filename: "[name].[contenthash].css"
     }),
-    // copy favicon to dist/
-    new CopyWebpackPlugin([{
-      from: './public/favicon-32x32.png',
-      to: './',
-    }]),
-  ],
+    // minify css!
+    new OptimizeCssAssetsPlugin({}),
+    // clean dist/ on each build / dev reload
+    new CleanWebpackPlugin()
+  ]
 };
