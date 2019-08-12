@@ -5,34 +5,26 @@ const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  // webpack always requires and entry point
   entry: "./src/index.js",
-  // specify the output path for build
   output: {
     path: path.join(__dirname, "dist"),
-    // contenthash so SW know something has changed
     filename: "[name].[contenthash].min.js"
   },
   optimization: {
-    // split out vendor code
     splitChunks: {
       chunks: "all"
     }
   },
-  // config for our local dev server, this gives us nice live reloading when working locally
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     overlay: true,
     port: 9000
   },
-  // define rules for different file types
   module: {
     rules: [
-      // JS + JSX
       {
         test: /\.m?js$/,
         exclude: /(node_modules)/,
-        /* JS */
         use: {
           loader: "babel-loader",
           options: {
@@ -41,22 +33,19 @@ module.exports = {
           }
         }
       },
-      // SASS
       {
         test: /\.scss$/,
         use: [
-          // in production mode, extract CSS to a separate file
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
               hmr: process.env.NODE_ENV === "development"
             }
           },
-          "css-loader", // translates CSS into CommonJS
-          "sass-loader" // compiles Sass to CSS
+          "css-loader",
+          "sass-loader"
         ]
       },
-      // CSS
       {
         test: /\.css$/,
         use: [
@@ -79,12 +68,10 @@ module.exports = {
           }
         ]
       },
-      // HTML
       {
         test: /\.(html)$/,
         use: ["html-loader"]
       },
-      // IMAGES
       {
         test: /\.(jpe?g|png|gif)$/,
         use: [
@@ -100,14 +87,12 @@ module.exports = {
           }
         ]
       },
-      // FONTS
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         use: ["file-loader"]
       }
     ]
   },
-  // template for index.html
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html",
@@ -121,13 +106,10 @@ module.exports = {
         useShortDoctype: true
       }
     }),
-    // adding contenthash to css so that SW knows when to update
     new MiniCssExtractPlugin({
       filename: "[name].[contenthash].css"
     }),
-    // minify css!
     new OptimizeCssAssetsPlugin({}),
-    // clean dist/ on each build / dev reload
     new CleanWebpackPlugin()
   ]
 };
