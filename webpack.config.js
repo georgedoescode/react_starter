@@ -5,7 +5,7 @@ const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: "./app/src/index.js",
   output: {
     path: path.join(__dirname, "dist"),
     filename: "[name].[contenthash].min.js"
@@ -95,7 +95,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/index.html",
+      template: "./app/public/index.html",
       filename: "index.html",
       minify: {
         collapseWhitespace: true,

@@ -4,8 +4,6 @@
 
 html {
   box-sizing: border-box;
-  /* not exactly a reset, but I would rather start a project with a nice sans */
-  font-family: system-ui;
 }
 
 *,
